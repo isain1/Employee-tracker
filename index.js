@@ -5,7 +5,15 @@ require("console.table");
 db.connect(function (err) {
   if (err) throw err;
   console.log("Database has bees succesfully connected!");
+  main();
 });
+
+// db.query("SELECT * FROM roles", (err, res) => {
+//     if (err) {
+//         throw err;
+//     }
+//     console.table(res);
+// })
 
 function departmentsList() {
     let departmentsArr = [];
@@ -22,7 +30,7 @@ function departmentsList() {
 
 function rolesList() {
     let rolesArr = [];
-    db.query("SELECT * FROM roless", (err, res) => {
+    db.query("SELECT * FROM roles", (err, res) => {
         if (err) {
             throw err;
         }
@@ -55,7 +63,7 @@ function addADepartment() {
             message: "New department name",
         },
     ]).then((answers) => {
-        db.query("INSERT INTO departments VALUES (?)", 
+        db.query("INSERT INTO departments VALUES ?", 
         [answers.department],
         (err) => {
             if (err) {
@@ -82,7 +90,7 @@ function addArole(){
             {
                 type: "input",
                 name: "salary",
-                message: "WHat is the salry for this new role?",
+                message: "What is the salary for this new role?",
             },
             {
                 type: "list",
@@ -173,7 +181,8 @@ function main() {
       ],
     },
   ]).then((answers) => {
-    switch (answers.action) {
+    console.log(answers);
+    switch (answers.selection) {
       case "View all departments":
         db.query("SELECT * FROM departments",
           (err, res) => {
@@ -223,4 +232,34 @@ function main() {
   });
 };
 
-main();
+
+function secondary() {
+    prompt([
+        {
+          type: "list",
+          name: "selection",
+          message: "What would you like to do?",
+          choices: [
+            "View all departments",
+            "View all roles",
+            "View all employees",
+            "Add a department",
+            "Add a role",
+            "Add an employee",
+            "Exit",
+          ],
+        },
+      ]).then((answers) => {
+        console.log(answers);
+        if (answers === "View all departments") {
+            db.query("SELECT * FROM departments",
+            (err, res) => {
+                if (err) {
+                    console.log("There is an error");
+                }
+                console.log(res);
+                //console.table(res);
+            })
+        }
+      })
+}
