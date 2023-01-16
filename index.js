@@ -63,7 +63,7 @@ function addADepartment() {
             message: "New department name",
         },
     ]).then((answers) => {
-        db.query("INSERT INTO departments VALUES ?", 
+        db.query("INSERT INTO departments (name) VALUES (?)", 
         [answers.department],
         (err) => {
             if (err) {
@@ -100,12 +100,13 @@ function addArole(){
             },
         ]).then((answers => {
             let choiceNumber = departmentsList().indexOf(answers.choice) + 1;
-            db.query("INSERT INTO roles SET ?", 
-            {
-                title: answers.title,
-                salary: answers.salary,
-                department_id: choiceNumber,
-            },
+            db.query("INSERT INTO roles (title, salary, department_id) VALUES (? ,? ,?)", 
+            // {
+            //     title: answers.title,
+            //     salary: answers.salary,
+            //     department_id: choiceNumber,
+            // },
+            [answers.title, answers.salary, department_id],
             function(err){
                 if (err) {
                     throw err;
